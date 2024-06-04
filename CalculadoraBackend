@@ -1,0 +1,42 @@
+package MP03_Programacio.calculadora;
+
+public class CalculadoraBackend {
+    private double numero1;
+    private double numero2;
+    private String operador;
+
+    public void setNumero1(double numero1) {
+        this.numero1 = numero1;
+    }
+
+    public void setNumero2(double numero2) {
+        this.numero2 = numero2;
+    }
+
+    public void setOperador(String operador) {
+        this.operador = operador;
+    }
+
+    public double calcular() {
+        double resultado = 0;
+        switch (operador) {
+            case "+":
+                resultado = numero1 + numero2;
+                break;
+            case "-":
+                resultado = numero1 - numero2;
+                break;
+            case "*":
+                resultado = numero1 * numero2;
+                break;
+            case "/":
+                if (numero2 != 0) {
+                    resultado = numero1 / numero2;
+                } else {
+                    throw new ArithmeticException("División por cero");
+                }
+                break;
+        }
+        return resultado;
+    }
+}
