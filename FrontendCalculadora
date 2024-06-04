@@ -1,0 +1,98 @@
+package MP03_Programacio.calculadora;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CalculadoraFrontend extends JFrame implements ActionListener {
+    private JTextArea pantalla;
+    private JPanel panel;
+    private CalculadoraBackend calculadoraBackend;
+
+    public CalculadoraFrontend() {
+        calculadoraBackend = new CalculadoraBackend();
+
+        setTitle("Calculadora");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        pantalla = new JTextArea(2, 20);  
+        pantalla.setFont(new Font("Arial", Font.PLAIN, 24));
+        pantalla.setEditable(false);
+        pantalla.setLineWrap(true); 
+        pantalla.setWrapStyleWord(true);  
+        JScrollPane scrollPane = new JScrollPane(pantalla);  
+        add(scrollPane, BorderLayout.NORTH);
+
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 4, 10, 10)); 
+        add(panel, BorderLayout.CENTER);
+
+        String[] botones = {
+                "7", "8", "9", "/",
+                "4", "5", "6", "*",
+                "1", "2", "3", "-",
+                ".", "0", "00", "+", 
+                "<", "C"  
+        };
+
+        for (int i = 0; i < botones.length; i++) {
+            JButton boton = new JButton(botones[i]);
+            boton.setFont(new Font("Arial", Font.PLAIN, 24));
+            boton.addActionListener(this);
+            panel.add(boton);
+        }
+        JButton boton = new JButton("=");
+        boton.setFont(new Font("Arial", Font.PLAIN, 24));
+        boton.addActionListener(this);
+        boton.setSize(500, 500);
+        panel.add(boton);
+        
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String comando = e.getActionCommand();
+
+        if (comando.charAt(0) >= '0' && comando.charAt(0) <= '9' || comando.equals(".")) {
+            pantalla.setText(pantalla.getText() + comando);
+        } 
+        else if (comando.equals("=")) {
+            calculadoraBackend.setNumero2(Double.parseDouble(pantalla.getText()));
+            try {
+                double resultado = calculadoraBackend.calcular();
+                pantalla.setText(String.valueOf(resultado));
+            } 
+            catch (ArithmeticException ex) {
+                pantalla.setText("Error syntax");
+            }
+            calculadoraBackend.setOperador("");
+        } 
+        else if (comando.equals("C")) {
+            pantalla.setText("");  
+            calculadoraBackend.setOperador("");
+        } 
+        else if (comando.equals("<")) {
+            String textoPantalla = pantalla.getText();
+            if (!textoPantalla.isEmpty()) {
+                pantalla.setText(textoPantalla.substring(0, textoPantalla.length() - 1));
+            }
+        } 
+        else {
+            if (!pantalla.getText().isEmpty()) {
+                calculadoraBackend.setNumero1(Double.parseDouble(pantalla.getText()));
+                calculadoraBackend.setOperador(comando);
+                pantalla.setText("");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            CalculadoraFrontend calculadora = new CalculadoraFrontend();
+            calculadora.setVisible(true);
+        });
+    }
+}
