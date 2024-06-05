@@ -1,5 +1,3 @@
-package MP03_Programacio.calculadora;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
