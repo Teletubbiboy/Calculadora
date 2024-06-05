@@ -1,5 +1,3 @@
-package MP03_Programacio.calculadora;
-
 public class CalculadoraBackend {
     private double numero1;
     private double numero2;
